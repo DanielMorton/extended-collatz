@@ -43,10 +43,10 @@ pub(crate) fn extended_collatz(
         }
     }
     let cycle_min = if slow < n {
-        cycle_mins.push(cycle_mins[(slow/2) as usize]);
+        cycle_mins.push(cycle_mins[(slow / 2) as usize]);
         *cycle_mins.last().unwrap()
     } else if fast < n {
-        cycle_mins.push(cycle_mins[(fast/2) as usize]);
+        cycle_mins.push(cycle_mins[(fast / 2) as usize]);
         *cycle_mins.last().unwrap()
     } else {
         let (cm, cycle) = collatz_cycle_min(&slow, a, p);
