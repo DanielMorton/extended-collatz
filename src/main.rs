@@ -1,12 +1,12 @@
 #![allow(warnings)]
 use crate::collatz::extended_collatz;
 use csv::Writer;
-use rayon::prelude::{ParallelIterator, IntoParallelIterator};
+use itertools::Itertools;
+use rayon::prelude::{IntoParallelIterator, ParallelIterator};
 use serde::Serialize;
 use std::collections::HashMap;
 use std::env;
 use std::time::Instant;
-use itertools::Itertools;
 
 mod collatz;
 
@@ -46,11 +46,11 @@ fn main() {
                 p <<= 1;
             }
             p >>= 1;
-            let mut cycle_mins = HashMap::new();
-            let mut cycle_map = HashMap::new();
+            let mut cycle_counts = HashMap::new();
+            let mut cycle_mins = Vec::new();
             let mut cycles = HashMap::new();
             (1..=n).step_by(2).for_each(|x| {
-                extended_collatz(x, a, p, &mut cycle_mins, &mut cycle_map, &mut cycles);
+                extended_collatz(x, a, p, &mut cycle_counts, &mut cycle_mins, &mut cycles);
             });
             /*let path = format!("collatz{}.csv", a);
             let mut wtr = Writer::from_path(path).unwrap();
@@ -76,7 +76,7 @@ fn main() {
                     .to_owned();
                 wtr.serialize(Cycle {
                     n: c,
-                    count: *cycle_mins.get(&c).unwrap(),
+                    count: *cycle_counts.get(&c).unwrap(),
                     length: cycle_vec.len(),
                     cycle: cycle_string,
                 })
