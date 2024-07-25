@@ -35,14 +35,14 @@ pub(crate) fn extended_collatz(
     cycles: &mut HashMap<u64, VecDeque<u64>>,
 ) -> () {
     let (mut slow, mut fast) = (n.clone(), n.clone());
-    collatz_step(&mut slow, a, p);
-    collatz_step(&mut fast, a, p);
-    collatz_step(&mut fast, a, p);
-    while slow != fast {
+    loop {
         collatz_step(&mut slow, a, p);
         collatz_step(&mut fast, a, p);
         collatz_step(&mut fast, a, p);
-    }
+        if slow == fast {
+            break;
+        }
+    };
     if cycle_map.contains_key(&n) {
         let cycle_min = *cycle_map.get(&n).unwrap();
         match cycle_mins.get(&cycle_min) {
