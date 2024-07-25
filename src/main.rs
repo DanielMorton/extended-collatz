@@ -53,7 +53,7 @@ fn main() {
                 extended_collatz(x, a, p, &mut cycle_mins, &mut cycle_map, &mut cycles);
             });
             /*let path = format!("collatz{}.csv", a);
-            et mut wtr = Writer::from_path(path).unwrap();
+            let mut wtr = Writer::from_path(path).unwrap();
             for x in (1..=n).step_by(2) {
                 wtr.serialize(Row {
                     n: x,
@@ -61,8 +61,8 @@ fn main() {
                 })
                 .unwrap();
             }
-            wtr.flush().unwrap();
-             */
+            wtr.flush().unwrap();*/
+
             let cycle_path = format!("cycle/cycle{}.csv", a);
             let mut wtr = Writer::from_path(cycle_path).unwrap();
             for &c in cycles.keys().sorted() {

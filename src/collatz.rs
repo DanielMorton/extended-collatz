@@ -1,4 +1,5 @@
-use std::collections::{HashMap, HashSet, VecDeque};
+use std::collections::{HashMap, VecDeque};
+
 
 fn collatz_step(n: &mut u64, a: u64, p: u64) {
     *n *= a;
@@ -9,14 +10,13 @@ fn collatz_step(n: &mut u64, a: u64, p: u64) {
 }
 
 fn collatz_cycle_min(mut n: u64, a: u64, p: u64) -> (u64, VecDeque<u64>) {
-    let mut visited = HashSet::new();
+    let m = n.clone();
     let mut cycle = VecDeque::new();
-    while !visited.contains(&n) {
+    while m != n || cycle.is_empty() {
         cycle.push_back(n);
-        visited.insert(n);
         collatz_step(&mut n, a, p);
     }
-    let &cycle_min = visited.iter().min().unwrap();
+    let &cycle_min = cycle.iter().min().unwrap();
     let mut front = *cycle.front().unwrap();
     while front != cycle_min {
         let _ = cycle.pop_front();
@@ -27,18 +27,21 @@ fn collatz_cycle_min(mut n: u64, a: u64, p: u64) -> (u64, VecDeque<u64>) {
 }
 
 pub(crate) fn extended_collatz(
-    mut n: u64,
+    n: u64,
     a: u64,
     p: u64,
     cycle_mins: &mut HashMap<u64, u64>,
     cycle_map: &mut HashMap<u64, u64>,
     cycles: &mut HashMap<u64, VecDeque<u64>>,
 ) -> () {
-    let mut visited = HashSet::new();
-    let m = n.clone();
-    while !visited.contains(&n) && !cycle_mins.contains_key(&n) {
-        visited.insert(n);
-        collatz_step(&mut n, a, p);
+    let (mut slow, mut fast) = (n.clone(), n.clone());
+    collatz_step(&mut slow, a, p);
+    collatz_step(&mut fast, a, p);
+    collatz_step(&mut fast, a, p);
+    while slow != fast {
+        collatz_step(&mut slow, a, p);
+        collatz_step(&mut fast, a, p);
+        collatz_step(&mut fast, a, p);
     }
     if cycle_map.contains_key(&n) {
         let cycle_min = *cycle_map.get(&n).unwrap();
@@ -46,11 +49,9 @@ pub(crate) fn extended_collatz(
             Some(v) => cycle_mins.insert(cycle_min, v + 1),
             None => cycle_mins.insert(cycle_min, 1),
         };
-        let cycle = cycles.get(&cycle_min).unwrap().to_owned();
-        cycle_map.insert(m, cycle_min);
     } else {
-        let (cycle_min, cycle) = collatz_cycle_min(n, a, p);
-        cycle_map.insert(m, cycle_min);
+        let (cycle_min, cycle) = collatz_cycle_min(slow, a, p);
+        cycle_map.insert(n, cycle_min);
         cycles.insert(cycle_min, cycle.clone());
         match cycle_mins.get(&cycle_min) {
             Some(v) => cycle_mins.insert(cycle_min, v + 1),
