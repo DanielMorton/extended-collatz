@@ -5,10 +5,10 @@ use itertools::Itertools;
 use rayon::prelude::{IntoParallelIterator, ParallelIterator};
 use serde::Serialize;
 use std::collections::HashMap;
-use std::env;
 use std::time::Instant;
 
 mod collatz;
+mod parse;
 
 #[derive(Serialize)]
 struct Row {
@@ -32,10 +32,21 @@ fn print_hms(start: &Instant) {
 }
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    let n = args[1].parse::<u64>().unwrap();
-    let a_start = args[2].parse::<u64>().unwrap();
-    let a_end = args[3].parse::<u64>().unwrap();
+    let matches = parse::parse();
+    let n = match matches.get_one::<u64>("n") {
+        Some(&n) => n,
+        None => panic!("Number of iterations not provided."),
+    };
+    let a_start = match matches.get_one::<u64>("start") {
+        Some(&s) => s,
+        None => panic!("No initial coefficient value."),
+    };
+    let a_end = match matches.get_one::<u64>("end") {
+        Some(&e) => e,
+        None => panic!("No initial coefficient value."),
+    };
+    let table = matches.get_flag("table");
+    let cycle = matches.get_flag("cycle");
     let start = Instant::now();
     (a_start..=a_end)
         .into_par_iter()
@@ -52,37 +63,40 @@ fn main() {
             (1..=n).step_by(2).for_each(|x| {
                 extended_collatz(x, a, p, &mut cycle_counts, &mut cycle_mins, &mut cycles);
             });
-            /*let path = format!("collatz{}.csv", a);
-            let mut wtr = Writer::from_path(path).unwrap();
-            for x in (1..=n).step_by(2) {
-                wtr.serialize(Row {
-                    n: x,
-                    cycle: *cycle_map.get(&x).unwrap(),
-                })
-                .unwrap();
+            if table {
+                let path = format!("table/collatz{}.csv", a);
+                let mut wtr = Writer::from_path(path).unwrap();
+                for x in (1..=n).step_by(2) {
+                    wtr.serialize(Row {
+                        n: x,
+                        cycle: cycle_mins[(x / 2) as usize],
+                    })
+                    .unwrap();
+                }
+                wtr.flush().unwrap();
             }
-            wtr.flush().unwrap();*/
-
-            let cycle_path = format!("cycle/cycle{}.csv", a);
-            let mut wtr = Writer::from_path(cycle_path).unwrap();
-            for &c in cycles.keys().sorted() {
-                let cycle_vec = cycles.get(&c).unwrap();
-                let cycle_string = cycle_vec
-                    .iter()
-                    .map(|&i| i.to_string() + " ")
-                    .collect::<String>()
-                    .strip_suffix(' ')
-                    .unwrap()
-                    .to_owned();
-                wtr.serialize(Cycle {
-                    n: c,
-                    count: *cycle_counts.get(&c).unwrap(),
-                    length: cycle_vec.len(),
-                    cycle: cycle_string,
-                })
-                .unwrap();
+            if cycle {
+                let cycle_path = format!("cycle/cycle{}.csv", a);
+                let mut wtr = Writer::from_path(cycle_path).unwrap();
+                for &c in cycles.keys().sorted() {
+                    let cycle_vec = cycles.get(&c).unwrap();
+                    let cycle_string = cycle_vec
+                        .iter()
+                        .map(|&i| i.to_string() + " ")
+                        .collect::<String>()
+                        .strip_suffix(' ')
+                        .unwrap()
+                        .to_owned();
+                    wtr.serialize(Cycle {
+                        n: c,
+                        count: *cycle_counts.get(&c).unwrap(),
+                        length: cycle_vec.len(),
+                        cycle: cycle_string,
+                    })
+                    .unwrap();
+                }
+                wtr.flush().unwrap()
             }
-            wtr.flush().unwrap()
         });
     print_hms(&start)
 }
