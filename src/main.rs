@@ -1,6 +1,6 @@
 #![allow(warnings)]
 use crate::collatz::extended_collatz;
-use crate::write::write_table;
+use crate::write::{write_cycle, write_table};
 use itertools::Itertools;
 use rayon::prelude::{IntoParallelIterator, ParallelIterator};
 use std::collections::HashMap;
@@ -49,10 +49,12 @@ fn main() {
             (1..=n).step_by(2).for_each(|x| {
                 extended_collatz(x, a, p, &mut cycle_counts, &mut cycle_mins, &mut cycles);
             });
-            if table {
+            if table && cycles.len() > 1{
                 write_table(&cycle_mins, &n, &a);
             }
-            if cycle {}
+            if cycle {
+                write_cycle(&cycles, &cycle_counts, &a);
+            }
         });
     print_hms(&start)
 }

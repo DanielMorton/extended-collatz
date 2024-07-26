@@ -1,7 +1,7 @@
 use csv::Writer;
 use itertools::Itertools;
 use serde::Serialize;
-use std::collections::HashMap;
+use std::collections::{HashMap, VecDeque};
 
 #[derive(Serialize)]
 struct Row {
@@ -31,7 +31,7 @@ pub fn write_table(cycle_mins: &[u64], n: &u64, a: &u64) -> () {
 }
 
 pub fn write_cycle(
-    cycles: &HashMap<u64, Vec<u64>>,
+    cycles: &HashMap<u64, VecDeque<u64>>,
     cycle_counts: &HashMap<u64, u64>,
     a: &u64,
 ) -> () {
