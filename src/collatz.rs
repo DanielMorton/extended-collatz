@@ -25,7 +25,7 @@ fn collatz_cycle_min(n: &u64, a: u64, p: u64) -> (u64, VecDeque<u64>) {
     (cycle_min, cycle)
 }
 
-pub(crate) fn extended_collatz(
+pub fn extended_collatz(
     n: u64,
     a: u64,
     p: u64,

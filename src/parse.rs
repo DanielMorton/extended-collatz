@@ -1,6 +1,6 @@
 use clap::{arg, value_parser, Arg, ArgMatches, Command};
 
-pub(super) fn parse() -> ArgMatches {
+pub fn parse() -> ArgMatches {
     Command::new("collatz")
         .arg(
             Arg::new("n")
