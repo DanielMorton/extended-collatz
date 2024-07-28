@@ -8,7 +8,7 @@ fn collatz_step(n: &mut u64, a: u64, p: u64) {
     }
 }
 
-fn collatz_cycle_min(n: &u64, a: u64, p: u64) -> (u64, VecDeque<u64>) {
+fn collatz_cycle_min(n: &u64, a: u64, p: u64) -> VecDeque<u64> {
     let mut m = *n;
     let mut cycle = VecDeque::new();
     while &m != n || cycle.is_empty() {
@@ -22,7 +22,7 @@ fn collatz_cycle_min(n: &u64, a: u64, p: u64) -> (u64, VecDeque<u64>) {
         cycle.push_back(front);
         front = *cycle.front().unwrap();
     }
-    (cycle_min, cycle)
+    cycle
 }
 
 pub fn extended_collatz(
@@ -49,7 +49,8 @@ pub fn extended_collatz(
         cycle_mins.push(cycle_mins[(fast / 2) as usize]);
         *cycle_mins.last().unwrap()
     } else {
-        let (cm, cycle) = collatz_cycle_min(&slow, a, p);
+        let cycle = collatz_cycle_min(&slow, a, p);
+        let &cm = cycle.front().unwrap();
         cycle_mins.push(cm);
         if !cycles.contains_key(&cm) {
             cycles.insert(cm, cycle.clone());
