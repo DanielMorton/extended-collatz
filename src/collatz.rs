@@ -1,8 +1,14 @@
 use std::collections::{HashMap, VecDeque};
 
 fn collatz_step(n: &mut u64, a: u64, p: u64) {
-    *n *= a;
-    *n += p - *n & (p - 1);
+    *n = n.checked_mul(a).unwrap_or(0);
+    if *n == 0 {
+        return;
+    }
+    *n = n.checked_add(p - *n & (p - 1)).unwrap_or(0);
+    if *n == 0 {
+        return;
+    }
     while *n & 1 == 0 {
         *n >>= 1;
     }
@@ -36,26 +42,28 @@ pub fn extended_collatz(
         collatz_step(&mut slow, a, p);
         collatz_step(&mut fast, a, p);
         collatz_step(&mut fast, a, p);
+        if slow == 0 || fast == 0 {
+            cycle_mins.push(0);
+            return;
+        }
         if slow == fast || slow < n || fast < n {
             break;
         }
     }
     let cycle_min = if slow < n {
-        cycle_mins.push(cycle_mins[(slow / 2) as usize]);
-        *cycle_mins.last().unwrap()
+        cycle_mins[(slow / 2) as usize]
     } else if fast < n {
-        cycle_mins.push(cycle_mins[(fast / 2) as usize]);
-        *cycle_mins.last().unwrap()
+        cycle_mins[(fast / 2) as usize]
     } else {
         let mut cycle =VecDeque::new();
         collatz_cycle_min(&slow, a, p, &mut cycle);
         let &cm = cycle.front().unwrap();
-        cycle_mins.push(cm);
         if !cycles.contains_key(&cm) {
             cycles.insert(cm, cycle.clone());
         }
         cm
     };
+    cycle_mins.push(cycle_min);
     match cycle_counts.get(&cycle_min) {
         Some(v) => cycle_counts.insert(cycle_min, v + 1),
         None => cycle_counts.insert(cycle_min, 1),
