@@ -59,7 +59,7 @@ pub fn extended_collatz(
         collatz_cycle_min(&slow, a, p, &mut cycle);
         let &cm = cycle.front().unwrap();
         if !cycles.contains_key(&cm) {
-            cycles.insert(cm, cycle.clone());
+            cycles.insert(cm, cycle);
         }
         cm
     };
