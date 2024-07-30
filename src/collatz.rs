@@ -1,4 +1,5 @@
 use std::collections::{HashMap, VecDeque};
+use crate::big_collatz::big_collatz;
 
 fn collatz_step(n: &mut u64, a: u64, p: u64) {
     *n = n.checked_mul(a).unwrap_or(0);
@@ -43,8 +44,8 @@ pub fn extended_collatz(
         collatz_step(&mut fast, a, p);
         collatz_step(&mut fast, a, p);
         if slow == 0 || fast == 0 {
-            cycle_mins.push(0);
-            return;
+            slow = big_collatz(n, a as u32, p as u32);
+            fast = slow;
         }
         if slow == fast || slow < n || fast < n {
             break;

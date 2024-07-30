@@ -9,6 +9,7 @@ use std::time::Instant;
 mod collatz;
 mod parse;
 mod write;
+mod big_collatz;
 
 fn print_hms(start: &Instant) {
     let millis = start.elapsed().as_millis();
