@@ -32,6 +32,7 @@ pub fn write_table(cycle_mins: &[u64], n: &u64, a: &u64) -> () {
 
 pub fn write_cycle(
     cycles: &HashMap<u64, VecDeque<u64>>,
+    cycles128: &HashMap<u64, VecDeque<u128>>,
     cycle_counts: &HashMap<u64, u64>,
     a: &u64,
 ) -> () {
@@ -39,6 +40,23 @@ pub fn write_cycle(
     let mut wtr = Writer::from_path(cycle_path).unwrap();
     for &c in cycles.keys().sorted() {
         let cycle_vec = cycles.get(&c).unwrap();
+        let cycle_string = cycle_vec
+            .iter()
+            .map(|&i| i.to_string() + " ")
+            .collect::<String>()
+            .strip_suffix(' ')
+            .unwrap()
+            .to_owned();
+        wtr.serialize(Cycle {
+            n: c,
+            count: *cycle_counts.get(&c).unwrap(),
+            length: cycle_vec.len(),
+            cycle: cycle_string,
+        })
+        .unwrap();
+    }
+    for &c in cycles128.keys().sorted() {
+        let cycle_vec = cycles128.get(&c).unwrap();
         let cycle_string = cycle_vec
             .iter()
             .map(|&i| i.to_string() + " ")
