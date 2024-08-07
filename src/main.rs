@@ -1,11 +1,11 @@
 #![allow(warnings)]
+use crate::big_collatz::big_collatz;
 use crate::collatz::{extended_collatz, extended_collatz128};
 use crate::write::{write_cycle, write_table};
 use itertools::Itertools;
 use rayon::prelude::{IntoParallelIterator, ParallelIterator};
 use std::collections::HashMap;
 use std::time::Instant;
-use crate::big_collatz::big_collatz;
 
 mod big_collatz;
 mod collatz;
@@ -71,9 +71,9 @@ fn main() {
                     list_big.push(x as u64);
                 }
             });
-            list_big.iter().for_each(|&x|{
-               let cycle_min =  big_collatz(x, a as u32, p as u32);
-                cycle_mins[(x/2) as usize] = cycle_min;
+            list_big.iter().for_each(|&x| {
+                let cycle_min = big_collatz(x, a as u32, p as u32);
+                cycle_mins[(x / 2) as usize] = cycle_min;
                 match cycle_counts.get(&cycle_min) {
                     Some(v) => cycle_counts.insert(cycle_min, v + 1),
                     None => cycle_counts.insert(cycle_min, 1),

@@ -144,7 +144,7 @@ pub fn extended_collatz128(
         }
         cm
     };
-    cycle_mins[(n/2) as usize] = cycle_min;
+    cycle_mins[(n / 2) as usize] = cycle_min;
     if cycle_min == 0 {
         return false;
     }
