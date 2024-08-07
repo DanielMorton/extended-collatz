@@ -1,5 +1,5 @@
-use std::collections::VecDeque;
 use rug::{Assign, Integer};
+use std::collections::VecDeque;
 
 fn big_collatz_step(n: &mut Integer, a: u32, p: u32) {
     *n *= a;
@@ -17,7 +17,6 @@ fn big_collatz_cycle(n: Integer, a: u32, p: u32) -> u64 {
         big_collatz_step(&mut m, a, p);
     }
     cycle.iter().min().unwrap().to_u64().unwrap()
-
 }
 
 pub fn big_collatz(n: u64, a: u32, p: u32) -> u64 {
