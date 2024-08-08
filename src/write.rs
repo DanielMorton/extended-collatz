@@ -12,7 +12,7 @@ struct Row {
 #[derive(Serialize)]
 struct Cycle {
     n: u64,
-    count: u64,
+    count: usize,
     length: usize,
     cycle: String,
 }
@@ -33,7 +33,7 @@ pub fn write_table(cycle_mins: &[u64], n: &u64, a: &u64) -> () {
 pub fn write_cycle(
     cycles: &HashMap<u64, VecDeque<u64>>,
     cycles128: &HashMap<u64, VecDeque<u128>>,
-    cycle_counts: &HashMap<u64, u64>,
+    cycle_counts: &HashMap<&u64, usize>,
     a: &u64,
 ) -> () {
     let cycle_path = format!("cycle/cycle{}.csv", a);

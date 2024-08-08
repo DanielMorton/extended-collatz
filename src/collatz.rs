@@ -70,7 +70,6 @@ pub fn extended_collatz(
     n: u64,
     a: u64,
     p: u64,
-    cycle_counts: &mut HashMap<u64, u64>,
     cycle_mins: &mut Vec<u64>,
     cycles: &mut HashMap<u64, VecDeque<u64>>,
 ) -> bool {
@@ -101,21 +100,13 @@ pub fn extended_collatz(
         cm
     };
     cycle_mins.push(cycle_min);
-    if cycle_min == 0 {
-        return false;
-    }
-    match cycle_counts.get(&cycle_min) {
-        Some(v) => cycle_counts.insert(cycle_min, v + 1),
-        None => cycle_counts.insert(cycle_min, 1),
-    };
-    true
+    cycle_min > 0
 }
 
 pub fn extended_collatz128(
     n: u128,
     a: u128,
     p: u128,
-    cycle_counts: &mut HashMap<u64, u64>,
     cycle_mins: &mut Vec<u64>,
     cycles: &mut HashMap<u64, VecDeque<u128>>,
 ) -> bool {
@@ -145,12 +136,5 @@ pub fn extended_collatz128(
         cm
     };
     cycle_mins[(n / 2) as usize] = cycle_min;
-    if cycle_min == 0 {
-        return false;
-    }
-    match cycle_counts.get(&cycle_min) {
-        Some(v) => cycle_counts.insert(cycle_min, v + 1),
-        None => cycle_counts.insert(cycle_min, 1),
-    };
-    true
+    cycle_min > 0
 }
