@@ -51,13 +51,7 @@ pub fn write_cycle(
     }
     for &c in cycles128.keys().sorted() {
         let cycle_vec = cycles128.get(&c).unwrap();
-        let cycle_string = cycle_vec
-            .iter()
-            .map(|&i| i.to_string() + " ")
-            .collect::<String>()
-            .strip_suffix(' ')
-            .unwrap()
-            .to_owned();
+        let cycle_string = cycle_vec.iter().map(|&i| i.to_string()).join(" ");
         wtr.serialize(Cycle {
             n: c,
             count: *cycle_counts.get(&c).unwrap(),
