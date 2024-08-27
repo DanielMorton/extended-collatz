@@ -40,13 +40,7 @@ pub fn write_cycle(
     let mut wtr = Writer::from_path(cycle_path).unwrap();
     for &c in cycles.keys().sorted() {
         let cycle_vec = cycles.get(&c).unwrap();
-        let cycle_string = cycle_vec
-            .iter()
-            .map(|&i| i.to_string() + " ")
-            .collect::<String>()
-            .strip_suffix(' ')
-            .unwrap()
-            .to_owned();
+        let cycle_string = cycle_vec.iter().map(|&i| i.to_string()).join(" -> ");
         wtr.serialize(Cycle {
             n: c,
             count: *cycle_counts.get(&c).unwrap(),
