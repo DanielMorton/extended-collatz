@@ -51,8 +51,7 @@ fn main() {
             let mut list128 = Vec::new();
             let mut list_big = Vec::new();
             (1..=n).step_by(2).for_each(|x| {
-                let finished =
-                    extended_collatz(x, a, p, &mut cycle_mins, &mut cycles);
+                let finished = extended_collatz(x, a, p, &mut cycle_mins, &mut cycles);
                 if !finished {
                     list128.push(x as u128);
                 }
@@ -61,13 +60,8 @@ fn main() {
                 println!("128 {} {}", a, list128.len());
             }
             list128.iter().for_each(|&x| {
-                let finished = extended_collatz128(
-                    x,
-                    a as u128,
-                    p as u128,
-                    &mut cycle_mins,
-                    &mut cycles128,
-                );
+                let finished =
+                    extended_collatz128(x, a as u128, p as u128, &mut cycle_mins, &mut cycles128);
                 if !finished {
                     list_big.push(x as u64);
                 }
