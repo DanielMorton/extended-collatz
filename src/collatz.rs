@@ -38,7 +38,12 @@ fn collatz_cycle(n: &u64, a: u64, p: u64, cycle: &mut Vec<u64>) -> () {
             return;
         }
     }
-    let min_id = cycle.iter().enumerate().min_by_key(|(_, &v)| v).map(|(i, _)| i).unwrap();
+    let min_id = cycle
+        .iter()
+        .enumerate()
+        .min_by_key(|(_, &v)| v)
+        .map(|(i, _)| i)
+        .unwrap();
     let mut cycle_back = cycle[..min_id].to_vec();
     *cycle = cycle[min_id..].to_owned();
     cycle.append(&mut cycle_back);
@@ -61,7 +66,12 @@ fn collatz_cycle128(n: &u128, a: u128, p: u128, cycle: &mut Vec<u128>) -> () {
             return;
         }
     }
-    let min_id = cycle.iter().enumerate().min_by_key(|(_, &v)| v).map(|(i, _)| i).unwrap();
+    let min_id = cycle
+        .iter()
+        .enumerate()
+        .min_by_key(|(_, &v)| v)
+        .map(|(i, _)| i)
+        .unwrap();
     let mut cycle_back = cycle[..min_id].to_vec();
     *cycle = cycle[min_id..].to_owned();
     cycle.append(&mut cycle_back);
