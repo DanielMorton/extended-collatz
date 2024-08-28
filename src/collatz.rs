@@ -1,4 +1,4 @@
-use std::collections::{HashMap, VecDeque};
+use std::collections::HashMap;
 
 fn collatz_step64(n: &mut u64, a: u64, p: u64) {
     *n = n.checked_mul(a).unwrap_or(0);
@@ -28,42 +28,50 @@ fn collatz_step128(n: &mut u128, a: u128, p: u128) {
     }
 }
 
-fn collatz_cycle(n: &u64, a: u64, p: u64, cycle: &mut VecDeque<u64>) -> () {
+fn collatz_cycle(n: &u64, a: u64, p: u64, cycle: &mut Vec<u64>) -> () {
     let mut m = *n;
     while &m != n || cycle.is_empty() {
-        cycle.push_back(m);
+        cycle.push(m);
         collatz_step64(&mut m, a, p);
         if m == 0 {
             cycle.clear();
             return;
         }
     }
-    let &cycle_min = cycle.iter().min().unwrap();
+    let min_id = cycle.iter().enumerate().min_by_key(|(_, &v)| v).map(|(i, _)| i).unwrap();
+    let mut cycle_back = cycle[..min_id].to_vec();
+    *cycle = cycle[min_id..].to_owned();
+    cycle.append(&mut cycle_back);
+    /*let &cycle_min = cycle.iter().min().unwrap();
     let mut front = *cycle.front().unwrap();
     while front != cycle_min {
         let _ = cycle.pop_front();
         cycle.push_back(front);
         front = *cycle.front().unwrap();
-    }
+    }*/
 }
 
-fn collatz_cycle128(n: &u128, a: u128, p: u128, cycle: &mut VecDeque<u128>) -> () {
+fn collatz_cycle128(n: &u128, a: u128, p: u128, cycle: &mut Vec<u128>) -> () {
     let mut m = *n;
     while &m != n || cycle.is_empty() {
-        cycle.push_back(m);
+        cycle.push(m);
         collatz_step128(&mut m, a, p);
         if m == 0 {
             cycle.clear();
             return;
         }
     }
-    let &cycle_min = cycle.iter().min().unwrap();
+    let min_id = cycle.iter().enumerate().min_by_key(|(_, &v)| v).map(|(i, _)| i).unwrap();
+    let mut cycle_back = cycle[..min_id].to_vec();
+    *cycle = cycle[min_id..].to_owned();
+    cycle.append(&mut cycle_back);
+    /*let &cycle_min = cycle.iter().min().unwrap();
     let mut front = *cycle.front().unwrap();
     while front != cycle_min {
         let _ = cycle.pop_front();
         cycle.push_back(front);
         front = *cycle.front().unwrap();
-    }
+    }*/
 }
 
 pub fn extended_collatz(
@@ -71,7 +79,7 @@ pub fn extended_collatz(
     a: u64,
     p: u64,
     cycle_mins: &mut Vec<u64>,
-    cycles: &mut HashMap<u64, VecDeque<u64>>,
+    cycles: &mut HashMap<u64, Vec<u64>>,
 ) -> bool {
     let (mut slow, mut fast) = (n, n);
     loop {
@@ -91,9 +99,9 @@ pub fn extended_collatz(
     } else if fast < n {
         cycle_mins[(fast / 2) as usize]
     } else {
-        let mut cycle = VecDeque::new();
+        let mut cycle = Vec::new();
         collatz_cycle(&slow, a, p, &mut cycle);
-        let &cm = cycle.front().unwrap();
+        let cm = cycle[0];
         if !cycles.contains_key(&cm) {
             cycles.insert(cm, cycle);
         }
@@ -108,7 +116,7 @@ pub fn extended_collatz128(
     a: u128,
     p: u128,
     cycle_mins: &mut Vec<u64>,
-    cycles: &mut HashMap<u64, VecDeque<u128>>,
+    cycles: &mut HashMap<u64, Vec<u128>>,
 ) -> bool {
     let (mut slow, mut fast) = (n, n);
     loop {
@@ -127,9 +135,9 @@ pub fn extended_collatz128(
     } else if fast < n {
         cycle_mins[(fast / 2) as usize]
     } else {
-        let mut cycle = VecDeque::new();
+        let mut cycle = Vec::new();
         collatz_cycle128(&slow, a, p, &mut cycle);
-        let cm = *cycle.front().unwrap() as u64;
+        let cm = cycle[0] as u64;
         if !cycles.contains_key(&cm) {
             cycles.insert(cm, cycle);
         }

@@ -31,8 +31,8 @@ pub fn write_table(cycle_mins: &[u64], n: &u64, a: &u64) -> () {
 }
 
 pub fn write_cycle(
-    cycles: &HashMap<u64, VecDeque<u64>>,
-    cycles128: &HashMap<u64, VecDeque<u128>>,
+    cycles: &HashMap<u64, Vec<u64>>,
+    cycles128: &HashMap<u64, Vec<u128>>,
     cycle_counts: &HashMap<&u64, usize>,
     a: &u64,
 ) -> () {
@@ -51,7 +51,7 @@ pub fn write_cycle(
     }
     for &c in cycles128.keys().sorted() {
         let cycle_vec = cycles128.get(&c).unwrap();
-        let cycle_string = cycle_vec.iter().map(|&i| i.to_string()).join(" ");
+        let cycle_string = cycle_vec.iter().map(|&i| i.to_string()).join(" -> ");
         wtr.serialize(Cycle {
             n: c,
             count: *cycle_counts.get(&c).unwrap(),
