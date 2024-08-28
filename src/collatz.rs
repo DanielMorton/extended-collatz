@@ -47,13 +47,6 @@ fn collatz_cycle(n: &u64, a: u64, p: u64, cycle: &mut Vec<u64>) -> () {
     let mut cycle_back = cycle[..min_id].to_vec();
     *cycle = cycle[min_id..].to_owned();
     cycle.append(&mut cycle_back);
-    /*let &cycle_min = cycle.iter().min().unwrap();
-    let mut front = *cycle.front().unwrap();
-    while front != cycle_min {
-        let _ = cycle.pop_front();
-        cycle.push_back(front);
-        front = *cycle.front().unwrap();
-    }*/
 }
 
 fn collatz_cycle128(n: &u128, a: u128, p: u128, cycle: &mut Vec<u128>) -> () {
@@ -75,13 +68,6 @@ fn collatz_cycle128(n: &u128, a: u128, p: u128, cycle: &mut Vec<u128>) -> () {
     let mut cycle_back = cycle[..min_id].to_vec();
     *cycle = cycle[min_id..].to_owned();
     cycle.append(&mut cycle_back);
-    /*let &cycle_min = cycle.iter().min().unwrap();
-    let mut front = *cycle.front().unwrap();
-    while front != cycle_min {
-        let _ = cycle.pop_front();
-        cycle.push_back(front);
-        front = *cycle.front().unwrap();
-    }*/
 }
 
 pub fn extended_collatz(
