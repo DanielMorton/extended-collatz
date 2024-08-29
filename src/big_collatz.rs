@@ -1,3 +1,5 @@
+use crate::collatz::Unsigned;
+use crate::collatz::Unsigned::{U128, U64};
 use rug::{Assign, Integer};
 use std::collections::VecDeque;
 
@@ -9,17 +11,18 @@ fn big_collatz_step(n: &mut Integer, a: u32, p: u32) {
     }
 }
 
-fn big_collatz_cycle(n: Integer, a: u32, p: u32) -> u64 {
+fn big_collatz_cycle(n: Integer, a: u32, p: u32) -> Unsigned {
     let mut m = n.clone();
     let mut cycle = VecDeque::new();
     while m != n || cycle.is_empty() {
         cycle.push_back(m.clone());
         big_collatz_step(&mut m, a, p);
     }
-    cycle.iter().min().unwrap().to_u64().unwrap()
+    let cm = cycle.iter().min().unwrap().to_u128().unwrap();
+    u64::try_from(cm).map(|x| U64(x)).unwrap_or(U128(cm))
 }
 
-pub fn big_collatz(n: u64, a: u32, p: u32) -> u64 {
+pub fn big_collatz(n: u64, a: u32, p: u32) -> Unsigned {
     let (mut slow, mut fast) = (Integer::new(), Integer::new());
     slow.assign(n);
     fast.assign(n);

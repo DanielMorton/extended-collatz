@@ -47,7 +47,6 @@ fn main() {
             p >>= 1;
             let mut cycle_mins = Vec::new();
             let mut cycles = HashMap::new();
-            let mut cycles128 = HashMap::new();
             let mut list128 = Vec::new();
             let mut list_big = Vec::new();
             (1..=n).step_by(2).for_each(|x| {
@@ -61,7 +60,7 @@ fn main() {
             }
             list128.iter().for_each(|&x| {
                 let finished =
-                    extended_collatz128(x, a as u128, p as u128, &mut cycle_mins, &mut cycles128);
+                    extended_collatz128(x, a as u128, p as u128, &mut cycle_mins, &mut cycles);
                 if !finished {
                     list_big.push(x as u64);
                 }
@@ -78,7 +77,7 @@ fn main() {
             }
             if cycle {
                 let cycle_counts = cycle_mins.iter().counts();
-                write_cycle(&cycles, &cycles128, &cycle_counts, &a);
+                write_cycle(&cycles, &cycle_counts, &a);
             }
         });
     print_hms(&start)
