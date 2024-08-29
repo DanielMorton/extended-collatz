@@ -36,11 +36,17 @@ pub fn write_cycle(
     cycle_counts: &HashMap<&Unsigned, usize>,
     a: &u64,
 ) -> () {
-    let cycle_path = format!("cycle/cycle{}.csv", a);
+    let cycle_path = format!("cycle/cycle{}u.csv", a);
     let mut wtr = Writer::from_path(cycle_path).unwrap();
     for &c in cycles.keys().sorted() {
         let cycle_vec = cycles.get(&c).unwrap();
-        let cycle_string = cycle_vec.iter().map(|&i| i.to_string()).join(" -> ");
+        let cycle_string = cycle_vec.iter().map(|&i| {
+            match i {
+                Unsigned::U64(u) => u.to_string(),
+                Unsigned::U128(u) => u.to_string(),
+                Unsigned::Zero => 0.to_string(),
+            }
+        }).join(" -> ");
         wtr.serialize(Cycle {
             n: c,
             count: *cycle_counts.get(&c).unwrap(),
