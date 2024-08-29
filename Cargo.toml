@@ -10,5 +10,3 @@ itertools = "0.13.0"
 rayon = "1.10.0"
 rug = "1.25.0"
 serde = {version = "1.0.204", features = ["derive"]}
-strum = "0.26.3"
-strum_macros = "0.26.4"

@@ -7,12 +7,12 @@ use std::collections::{HashMap, VecDeque};
 #[derive(Serialize)]
 struct Row {
     n: u64,
-    cycle: Unsigned,
+    cycle: String,
 }
 
 #[derive(Serialize)]
 struct Cycle {
-    n: Unsigned,
+    n: String,
     count: usize,
     length: usize,
     cycle: String,
@@ -24,7 +24,12 @@ pub fn write_table(cycle_mins: &[Unsigned], n: &u64, a: &u64) -> () {
     for x in (1..=*n).step_by(2) {
         wtr.serialize(Row {
             n: x,
-            cycle: cycle_mins[(x / 2) as usize],
+            cycle: match &cycle_mins[(x / 2) as usize] {
+                Unsigned::BigInteger(b) => b.to_string(),
+                Unsigned::U64(u) => u.to_string(),
+                Unsigned::U128(u) => u.to_string(),
+                Unsigned::Zero => 0.to_string(),
+            },
         })
         .unwrap();
     }
@@ -38,17 +43,24 @@ pub fn write_cycle(
 ) -> () {
     let cycle_path = format!("cycle/cycle{}u.csv", a);
     let mut wtr = Writer::from_path(cycle_path).unwrap();
-    for &c in cycles.keys().sorted() {
+    for c in cycles.keys().sorted() {
         let cycle_vec = cycles.get(&c).unwrap();
-        let cycle_string = cycle_vec.iter().map(|&i| {
-            match i {
+        let cycle_string = cycle_vec
+            .iter()
+            .map(|i| match i {
+                Unsigned::BigInteger(b) => b.to_string(),
                 Unsigned::U64(u) => u.to_string(),
                 Unsigned::U128(u) => u.to_string(),
                 Unsigned::Zero => 0.to_string(),
-            }
-        }).join(" -> ");
+            })
+            .join(" -> ");
         wtr.serialize(Cycle {
-            n: c,
+            n: match &c {
+                Unsigned::BigInteger(b) => b.to_string(),
+                Unsigned::U64(u) => u.to_string(),
+                Unsigned::U128(u) => u.to_string(),
+                Unsigned::Zero => 0.to_string(),
+            },
             count: *cycle_counts.get(&c).unwrap(),
             length: cycle_vec.len(),
             cycle: cycle_string,

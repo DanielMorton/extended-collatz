@@ -1,11 +1,11 @@
-use serde::Serialize;
+use rug::Integer;
 use std::collections::HashMap;
-use strum_macros::Display;
 
-#[derive(Copy, Clone, Debug, Display, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize)]
+#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub(crate) enum Unsigned {
     U64(u64),
     U128(u128),
+    BigInteger(Integer),
     Zero,
 }
 
@@ -50,7 +50,7 @@ fn collatz_cycle(n: &u64, a: u64, p: u64, cycle: &mut Vec<Unsigned>) -> () {
     let min_id = cycle
         .iter()
         .enumerate()
-        .min_by_key(|(_, &v)| v)
+        .min_by_key(|(_, &ref v)| v)
         .map(|(i, _)| i)
         .unwrap();
     let mut cycle_back = cycle[..min_id].to_vec();
@@ -75,7 +75,7 @@ fn collatz_cycle128(n: &u128, a: u128, p: u128, cycle: &mut Vec<Unsigned>) -> ()
     let min_id = cycle
         .iter()
         .enumerate()
-        .min_by_key(|(_, &v)| v)
+        .min_by_key(|(_, &ref v)| v)
         .map(|(i, _)| i)
         .unwrap();
     let mut cycle_back = cycle[..min_id].to_vec();
@@ -104,19 +104,19 @@ pub fn extended_collatz(
         }
     }
     let cycle_min = if slow < n {
-        cycle_mins[(slow / 2) as usize]
+        cycle_mins[(slow / 2) as usize].clone()
     } else if fast < n {
-        cycle_mins[(fast / 2) as usize]
+        cycle_mins[(fast / 2) as usize].clone()
     } else {
         let mut cycle = Vec::new();
         collatz_cycle(&slow, a, p, &mut cycle);
-        let cm = cycle[0];
+        let cm = cycle[0].clone();
         if !cycles.contains_key(&cm) {
-            cycles.insert(cm, cycle);
+            cycles.insert(cm.clone(), cycle);
         }
         cm
     };
-    cycle_mins.push(cycle_min);
+    cycle_mins.push(cycle_min.clone());
     cycle_min != Unsigned::Zero
 }
 
@@ -140,18 +140,18 @@ pub fn extended_collatz128(
         }
     }
     let cycle_min = if slow < n {
-        cycle_mins[(slow / 2) as usize]
+        cycle_mins[(slow / 2) as usize].clone()
     } else if fast < n {
-        cycle_mins[(fast / 2) as usize]
+        cycle_mins[(fast / 2) as usize].clone()
     } else {
         let mut cycle = Vec::new();
         collatz_cycle128(&slow, a, p, &mut cycle);
-        let cm = cycle[0];
+        let cm = cycle[0].clone();
         if !cycles.contains_key(&cm) {
-            cycles.insert(cm, cycle);
+            cycles.insert(cm.clone(), cycle);
         }
         cm
     };
-    cycle_mins[(n / 2) as usize] = cycle_min;
+    cycle_mins[(n / 2) as usize] = cycle_min.clone();
     cycle_min != Unsigned::Zero
 }

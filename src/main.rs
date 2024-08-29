@@ -69,8 +69,7 @@ fn main() {
                 println!("Big {} {}", a, list_big.len());
             }
             list_big.iter().for_each(|&x| {
-                let cycle_min = big_collatz(x, a as u32, p as u32);
-                cycle_mins[(x / 2) as usize] = cycle_min;
+                big_collatz(x, a as u32, p as u32, &mut cycle_mins, &mut cycles);
             });
             if table && cycles.len() > 1 {
                 write_table(&cycle_mins, &n, &a);
