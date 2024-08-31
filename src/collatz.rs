@@ -1,6 +1,6 @@
+use crate::collatz::Unsigned::{BigInteger, U128, U64};
 use rug::{Assign, Integer};
 use std::collections::HashMap;
-use crate::collatz::Unsigned::{BigInteger, U128, U64};
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub(crate) enum Unsigned {
@@ -13,38 +13,30 @@ fn is_even(n: &Unsigned) -> bool {
     match n {
         U64(u) => u & 1 == 0,
         U128(u) => u & 1 == 0,
-        BigInteger(u) => u.mod_u(2) == 0
+        BigInteger(u) => u.mod_u(2) == 0,
     }
 }
 
 fn collatz_step(n: &mut Unsigned, a: u64, p: u64) {
     *n = match n {
-        U64(u) => {
-            match u.checked_mul(a) {
-                Some(m) => U64(m),
-                None => U128((*u as u128) * (a as u128))
-            }
+        U64(u) => match u.checked_mul(a) {
+            Some(m) => U64(m),
+            None => U128((*u as u128) * (a as u128)),
         },
-        U128(u) => {
-            match u.checked_mul(a as u128) {
-                Some(m) => U128(m),
-                None => {
-                    let mut i = Integer::new();
-                    i.assign(*u);
-                    BigInteger(i * a)
-                }
+        U128(u) => match u.checked_mul(a as u128) {
+            Some(m) => U128(m),
+            None => {
+                let mut i = Integer::new();
+                i.assign(*u);
+                BigInteger(i * a)
             }
         },
         BigInteger(u) => BigInteger(u.clone() * a),
     };
     *n = match n {
-        U64(u) => {
-            match u.checked_add(p - *u & (p - 1)) {
-                Some(m) => U64(m),
-                None => {
-                    U128((*u as u128) + (p - *u & (p - 1)) as u128)
-                }
-            }
+        U64(u) => match u.checked_add(p - *u & (p - 1)) {
+            Some(m) => U64(m),
+            None => U128((*u as u128) + (p - *u & (p - 1)) as u128),
         },
         U128(u) => {
             let p128 = p as u128;
@@ -56,7 +48,7 @@ fn collatz_step(n: &mut Unsigned, a: u64, p: u64) {
                     BigInteger(i + (p128 - (*u & (p128 - 1))) as u64)
                 }
             }
-        },
+        }
         BigInteger(u) => BigInteger(u.clone() + (p as u32) - u.mod_u(p as u32)),
     };
     while is_even(n) {
@@ -65,7 +57,7 @@ fn collatz_step(n: &mut Unsigned, a: u64, p: u64) {
             U128(u) => {
                 let v = *u >> 1;
                 u64::try_from(v).map(|x| U64(x)).unwrap_or(U128(v))
-            },
+            }
             BigInteger(u) => {
                 let v: Integer = u.clone() >> 1;
                 v.to_u128().map(|x| U128(x)).unwrap_or(BigInteger(v))
@@ -124,11 +116,15 @@ pub fn extended_collatz(
     let cycle_min = if slow < un {
         if let U64(m) = slow {
             cycle_mins[(m / 2) as usize].clone()
-        } else {panic!()}
+        } else {
+            panic!()
+        }
     } else if fast < un {
         if let U64(m) = fast {
             cycle_mins[(m / 2) as usize].clone()
-        } else {panic!()}
+        } else {
+            panic!()
+        }
     } else {
         let mut cycle = Vec::new();
         collatz_cycle(&slow, a, p, &mut cycle);

@@ -47,7 +47,6 @@ fn main() {
             let mut cycles = HashMap::new();
             (1..=n).step_by(2).for_each(|x| {
                 extended_collatz(x, a, p, &mut cycle_mins, &mut cycles);
-
             });
             if table && cycles.len() > 1 {
                 write_table(&cycle_mins, &n, &a);

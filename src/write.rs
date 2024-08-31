@@ -40,7 +40,7 @@ pub fn write_cycle(
     cycle_counts: &HashMap<&Unsigned, usize>,
     a: &u64,
 ) -> () {
-    let cycle_path = format!("cycle/cycle{}.csv", a);
+    let cycle_path = format!("cycle/cycle{}u.csv", a);
     let mut wtr = Writer::from_path(cycle_path).unwrap();
     for c in cycles.keys().sorted() {
         let cycle_vec = cycles.get(&c).unwrap();
