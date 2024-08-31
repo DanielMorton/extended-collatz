@@ -2,7 +2,7 @@ use crate::collatz::Unsigned;
 use csv::Writer;
 use itertools::Itertools;
 use serde::Serialize;
-use std::collections::{HashMap, VecDeque};
+use std::collections::HashMap;
 
 #[derive(Serialize)]
 struct Row {
@@ -28,7 +28,6 @@ pub fn write_table(cycle_mins: &[Unsigned], n: &u64, a: &u64) -> () {
                 Unsigned::BigInteger(b) => b.to_string(),
                 Unsigned::U64(u) => u.to_string(),
                 Unsigned::U128(u) => u.to_string(),
-                Unsigned::Zero => 0.to_string(),
             },
         })
         .unwrap();
@@ -51,7 +50,6 @@ pub fn write_cycle(
                 Unsigned::BigInteger(b) => b.to_string(),
                 Unsigned::U64(u) => u.to_string(),
                 Unsigned::U128(u) => u.to_string(),
-                Unsigned::Zero => 0.to_string(),
             })
             .join(" -> ");
         wtr.serialize(Cycle {
@@ -59,7 +57,6 @@ pub fn write_cycle(
                 Unsigned::BigInteger(b) => b.to_string(),
                 Unsigned::U64(u) => u.to_string(),
                 Unsigned::U128(u) => u.to_string(),
-                Unsigned::Zero => 0.to_string(),
             },
             count: *cycle_counts.get(&c).unwrap(),
             length: cycle_vec.len(),
