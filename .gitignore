@@ -1,5 +1,5 @@
-./cycle/*
-./table/*
+cycle/*
+table/*
 Cargo.lock
 *.iml
 ./.idea
