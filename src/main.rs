@@ -1,13 +1,11 @@
 #![allow(warnings)]
-use crate::big_collatz::big_collatz;
-use crate::collatz::{extended_collatz, extended_collatz128};
+use crate::collatz::extended_collatz;
 use crate::write::{write_cycle, write_table};
 use itertools::Itertools;
 use rayon::prelude::{IntoParallelIterator, ParallelIterator};
 use std::collections::HashMap;
 use std::time::Instant;
 
-mod big_collatz;
 mod collatz;
 mod parse;
 mod write;
@@ -47,29 +45,8 @@ fn main() {
             p >>= 1;
             let mut cycle_mins = Vec::new();
             let mut cycles = HashMap::new();
-            let mut list128 = Vec::new();
-            let mut list_big = Vec::new();
             (1..=n).step_by(2).for_each(|x| {
-                let finished = extended_collatz(x, a, p, &mut cycle_mins, &mut cycles);
-                if !finished {
-                    list128.push(x as u128);
-                }
-            });
-            if !list128.is_empty() {
-                println!("128 {} {}", a, list128.len());
-            }
-            list128.iter().for_each(|&x| {
-                let finished =
-                    extended_collatz128(x, a as u128, p as u128, &mut cycle_mins, &mut cycles);
-                if !finished {
-                    list_big.push(x as u64);
-                }
-            });
-            if !list_big.is_empty() {
-                println!("Big {} {}", a, list_big.len());
-            }
-            list_big.iter().for_each(|&x| {
-                big_collatz(x, a as u32, p as u32, &mut cycle_mins, &mut cycles);
+                extended_collatz(x, a, p, &mut cycle_mins, &mut cycles);
             });
             if table && cycles.len() > 1 {
                 write_table(&cycle_mins, &n, &a);
