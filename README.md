@@ -74,5 +74,48 @@ p and 2p. Starting with any odd number n, we multiply by a and then add the smal
 such that the result is divisible by p and then divide by 2 until the number is odd again. If we
 repeat these steps the heuristic argument says that the next odd number should be, on average,
 a/(2p) times it's predecessor. Since a/(2p) < 1, we should expect each sequence, regardless of starting
-value, reach some finite cycle.
+value, reach some finite cycle. This last statement is the Generalized Collatz Conjecture.
 
+This is one case where a single step of the generalized Collatz algorithm is best understood by reading the code
+
+```python
+def collatz_step(n, a, p):
+    # Multiply by a
+    n *= a
+    
+    # Add the smallest value so that n is divisible by p
+    n += p - n & (p - 1)
+    
+    # Divide by 2 until n is odd
+    while not (n & 1):
+        n >>= 1
+    
+    return n
+```
+
+Of course, the code in `src/collatz.rs` is a bit more complicated. The main reason for that is it uses three integer types.
+The conjecture has been verified for values of $a$ up to 8191 (one less than 2<sup>13</sup>) and odd number numbers up to 
+10 million (in some cases 100 million) but some sequences, and even some cycles, get very large. In the interest of 
+keeping use of the slow, but unbounded, `rug::Integer` class to a minimum I constructed a system that switches between
+`u64`, `u128`, and `Integer` as needed.
+
+## Running the Code
+
+If you've made it this far, you probably want to know how the code works. You might even be wondering why I wrote it 
+in Rust. The short answer to the second question is speed. Rust almost as fast as C, sometimes faster than C++, and doesn't
+have null pointer errors. Python just can't compete.
+
+I'll assume you have Rust installed.
+
+Download the source code from Github. To compile, just run 
+
+```
+cargo build --release
+```
+
+The program checks the Generalized Collatz Conjecture for all odd numbers up to a specified value, the `-n` flag
+and for values of $a$ between a `--start` and `--end` value inclusive. Output can take one of two forms, the `--cycle` flag
+outputs all cycles found for each value of $a$, with one file for each $a$. The `--table` flag outputs the
+lowest number of the cycle for each starting value and value of $a$. Be careful with the `--table` flag
+as it is quite easy to produce a lot of large files if `-n` is large and there is a big gap between
+`--start` and `--end`.
