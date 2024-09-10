@@ -31,8 +31,8 @@ fn main() {
         Some(&e) => e,
         None => panic!("No final coefficient value."),
     };
-    let table = matches.get_flag("tables");
-    let cycle = matches.get_flag("cycles");
+    let table = matches.get_flag("table");
+    let cycle = matches.get_flag("cycle");
     let start = Instant::now();
     (a_start..=a_end)
         .into_par_iter()
