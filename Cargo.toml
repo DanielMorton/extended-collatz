@@ -1,7 +1,18 @@
 [package]
 name = "collatz_rust"
 version = "0.1.0"
+authors = ["DanielMorton <dacmorton@gmail.com>"]
+description = "Code for testing an extention of the Collatz Conjecture"
+repository = "https://github.com/DanielMorton/extended-collatz"
+license = "MIT OR Apache-2.0"
 edition = "2021"
+exclude = [
+    ".idea/*",
+    "collatz_rust.iml",
+    "cycles/*",
+    "cycles100/*",
+    "tables/*"
+]
 
 [dependencies]
 clap = "4.5.16"
