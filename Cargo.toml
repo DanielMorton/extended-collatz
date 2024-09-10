@@ -10,7 +10,7 @@ exclude = [
     ".idea/*",
     "collatz_rust.iml",
     "cycles/*",
-    "cycles100/*",
+    "cycle100/*",
     "tables/*"
 ]
 
