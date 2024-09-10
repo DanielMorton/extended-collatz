@@ -123,6 +123,8 @@ as it is quite easy to produce a lot of large files if `-n` is large and there i
 a folder called `tables`. In cases, such as the classic Collatz $a=3$ where there is only one known cycle, `--table`
 does not produce any output.
 
+Computations are done for multiple values of $a$ at one time, depending on the number of available cores.
+
 As an example, to find all cycles with starting values less than 1 million for values of $a$ between 
 3 and 15 run the following
 

@@ -1,6 +1,6 @@
 [package]
 name = "collatz_rust"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["DanielMorton <dacmorton@gmail.com>"]
 description = "Code for testing an extention of the Collatz Conjecture"
 repository = "https://github.com/DanielMorton/extended-collatz"
@@ -15,9 +15,9 @@ exclude = [
 ]
 
 [dependencies]
-clap = "4.5.16"
+clap = "4.5.17"
 csv = "1.3.0"
 itertools = "0.13.0"
 rayon = "1.10.0"
 rug = "1.26.0"
-serde = {version = "1.0.209", features = ["derive"]}
+serde = {version = "1.0.210", features = ["derive"]}
