@@ -48,7 +48,7 @@ pub fn write_cycle(
     if !Path::new("../cycles").exists() {
         fs::create_dir("../cycles").unwrap_or_else(|_| panic!("Cannot create directory 'cycles'."));
     }
-    let cycle_path = format!("cycles/cycles{}.csv", a);
+    let cycle_path = format!("cycles/cycle{}.csv", a);
     let mut wtr = Writer::from_path(cycle_path).unwrap();
     for c in cycles.keys().sorted() {
         let cycle_vec = cycles.get(&c).unwrap();
