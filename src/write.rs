@@ -14,7 +14,7 @@ struct Row {
 
 #[derive(Serialize)]
 struct Cycle {
-    n: String,
+    min: String,
     count: usize,
     length: usize,
     cycle: String,
@@ -61,7 +61,7 @@ pub fn write_cycle(
             })
             .join(" -> ");
         wtr.serialize(Cycle {
-            n: match &c {
+            min: match &c {
                 Unsigned::BigInteger(b) => b.to_string(),
                 Unsigned::U64(u) => u.to_string(),
                 Unsigned::U128(u) => u.to_string(),

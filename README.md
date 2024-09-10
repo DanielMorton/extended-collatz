@@ -45,6 +45,8 @@ to infinity. As noted before the frequency of the four cycles remains consistent
 noting that the non-trivial cycles all have the same length. The fact that the non-trivial cycles all start with
 prime numbers is coincidence.
 
+In what follows, a cycle will often be denoted by it's smallest number
+
 ### 7n + 1
 
 It's trivial to replace 5 with 7. Starting with an odd number, multiply by 7 and add 1 or 3, whichever yields a multiple of 4. Divide
@@ -138,4 +140,28 @@ cargo run --release -- -n 1000000 --start 3 --end 15 --cycle
 | --start | Lowest value of $a$.                                        |
 | --end | Highest value of $a$.                                       |
 | --cycle| Outputs a csv of cycles for each value of $a$.              |
-| --table | Outputs a csv of minimum cycle values for each starting value and each value of $a$.|                             
+| --table | Outputs a csv of minimum cycle values for each starting value and each value of $a$.| 
+
+Sample output of a `cycle` file, for $a=5$ and `-n 1000000000`.
+
+| min |count|length|cycle|
+|:---:|:-:|:-:|:-:|
+|  1  |314754837|1|1|
+| 31  |66215034|3|31 -> 39 -> 49|
+| 37  |99485169|3|37 -> 47 -> 59|
+| 61  |19544960|3|61 -> 77 -> 97|
+
+Sample output of a file in the `table` directory for $a=7$ and `-n 20`.
+
+|n|cycle|
+|:-:|:-:|
+|1|1|
+|3|3|
+|5|1|
+|7|1|
+|9|1|
+|11|1|
+|13|1|
+|15|3|
+|17|3|
+|19|3|
