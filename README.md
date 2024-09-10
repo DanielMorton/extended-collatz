@@ -136,4 +136,4 @@ cargo run --release -- -n 1000000 --start 3 --end 15 --cycle
 | --start | Lowest value of $a$.                                        |
 | --end | Highest value of $a$.                                       |
 | --cycle| Outputs a csv of cycles for each value of $a$.              |
-| --table | Outputs a csv of minimum cycle values for each starting value and each value of $a$.                                        
+| --table | Outputs a csv of minimum cycle values for each starting value and each value of $a$.|                             
