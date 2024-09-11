@@ -21,8 +21,8 @@ struct Cycle {
 }
 
 pub fn write_table(cycle_mins: &[Unsigned], n: &u64, a: &u64) -> () {
-    if !Path::new("../tables").exists() {
-        fs::create_dir("../tables").unwrap_or_else(|_| panic!("Cannot create directory 'tables'."));
+    if !Path::new("tables").exists() {
+        fs::create_dir("tables").unwrap_or_else(|_| panic!("Cannot create directory 'tables'."));
     }
     let path = format!("tables/collatz{}.csv", a);
     let mut wtr = Writer::from_path(path).unwrap();
@@ -45,8 +45,8 @@ pub fn write_cycle(
     cycle_counts: &HashMap<&Unsigned, usize>,
     a: &u64,
 ) -> () {
-    if !Path::new("../cycles").exists() {
-        fs::create_dir("../cycles").unwrap_or_else(|_| panic!("Cannot create directory 'cycles'."));
+    if !Path::new("cycles").exists() {
+        fs::create_dir("cycles").unwrap_or_else(|_| panic!("Cannot create directory 'cycles'."));
     }
     let cycle_path = format!("cycles/cycle{}.csv", a);
     let mut wtr = Writer::from_path(cycle_path).unwrap();
