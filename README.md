@@ -47,7 +47,7 @@ prime numbers is coincidence.
 
 In what follows, a cycle will often be denoted by it's smallest number
 
-### 7n + 1
+### 7n + (1, 3)
 
 It's trivial to replace 5 with 7. Starting with an odd number, multiply by 7 and add 1 or 3, whichever yields a multiple of 4. Divide
 by two until the number is odd again. Once
