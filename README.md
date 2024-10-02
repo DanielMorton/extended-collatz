@@ -116,9 +116,9 @@ cargo build --release
 ```
 
 The program checks the Generalized Collatz Conjecture for all odd numbers up to a specified value, the `-n` flag
-and for values of $a$ between a `--start` and `--end` value inclusive. Output can take one of two forms, the `--cycle` flag
+and for values of $a$ between a `--start` and `--end` value inclusive. Output can take one of two forms, the `--write-cycle` flag
 outputs all cycles found for each value of $a$, with one file for each $a$. This file includes cycle length and the 
-frequency of each cycle. The `--table` flag outputs the
+frequency of each cycle. The `--write-table` flag outputs the
 lowest number of the cycle for each starting value and value of $a$. Be careful with the `--table` flag
 as it is quite easy to produce a lot of large files if `-n` is large and there is a big gap between
 `--start` and `--end`. Cycle files are stored in a folder called `cycles` and tables of cycle mins are stored in
@@ -131,16 +131,16 @@ As an example, to find all cycles with starting values less than 1 million for v
 3 and 15 run the following
 
 ```
-cargo run --release -- -n 1000000 --start 3 --end 15 --cycle
+cargo run --release -- -n 1000000 --start 3 --end 15 --write-cycle
 ```
 
-| Command | Definition                                                  |
-|:-------|:------------------------------------------------------------|
-| -n | Run algorithm for all starting values less than this number |
-| --start | Lowest value of $a$.                                        |
-| --end | Highest value of $a$.                                       |
-| --cycle| Outputs a csv of cycles for each value of $a$.              |
-| --table | Outputs a csv of minimum cycle values for each starting value and each value of $a$.| 
+| Command       | Definition                                                                           |
+|:--------------|:-------------------------------------------------------------------------------------|
+| -n            | Run algorithm for all starting values less than this number                          |
+| -s --start    | Lowest value of $a$.                                        |
+| -e --end      | Highest value of $a$.                                                                |
+| --write-cycle | Outputs a csv of cycles for each value of $a$.                                       |
+| --write-table | Outputs a csv of minimum cycle values for each starting value and each value of $a$. | 
 
 Sample output of a `cycle` file, for $a=5$ and `-n 1000000000`.
 
