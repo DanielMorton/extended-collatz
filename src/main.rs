@@ -59,10 +59,17 @@ fn main() -> Result<()> {
     let args = Args::parse()?;
     let start = Instant::now();
 
-    (args.a_start..=args.a_end)
-        .into_par_iter()
+    let results: Vec<_> = (args.a_start..=args.a_end)
         .filter(|&a| a % 2 == 1)
-        .try_for_each(|a| process_collatz(a, args.n, args.write_table, args.write_cycle))?;
+        .collect::<Vec<_>>()
+        .into_par_iter()
+        .map(|a| process_collatz(a, args.n, args.write_table, args.write_cycle))
+        .collect();
+
+    // Handle errors after collecting results
+    for result in results {
+        result?;
+    }
 
     print_elapsed_time(&start);
     Ok(())
