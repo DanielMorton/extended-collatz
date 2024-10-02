@@ -1,5 +1,4 @@
 use anyhow::Result;
-use log::info;
 use rayon::prelude::{IntoParallelIterator, ParallelIterator};
 use std::collections::HashMap;
 use std::time::Instant;
@@ -16,7 +15,7 @@ fn print_elapsed_time(start: &Instant) {
     let millis = start.elapsed().as_millis();
     let seconds = millis / 1000;
     let (hour, minute, second) = (seconds / 3600, (seconds % 3600) / 60, seconds % 60);
-    info!(
+    println!(
         "Elapsed time: {:02}:{:02}:{:02}.{:03}",
         hour,
         minute,
