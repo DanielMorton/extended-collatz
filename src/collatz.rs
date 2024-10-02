@@ -69,7 +69,7 @@ fn collatz_step(n: &mut Unsigned, a: u64, p: u64) {
         Unsigned::U64(u) => u
             .checked_add(p - (*u & (p - 1)))
             .map(Unsigned::U64)
-            .unwrap_or_else(|| Unsigned::U128((*u as u128) + (p - *u & (p - 1)) as u128)),
+            .unwrap_or_else(|| Unsigned::U128((*u as u128) + (p - (*u & (p - 1))) as u128)),
         Unsigned::U128(u) => {
             let p128 = p as u128;
             u.checked_add(p128 - (*u & (p128 - 1)))
