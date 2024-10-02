@@ -103,7 +103,8 @@ mod tests {
             Unsigned::from(1u64),
             vec![Unsigned::from(1u64), Unsigned::from(2u64)],
         );
-        let cycle_counts = HashMap::from([(&Unsigned::from(1u64), 2)]);
+        let one = Unsigned::from(1u64);
+        let cycle_counts: HashMap<&Unsigned, usize> = HashMap::from([(&one, 2)]);
         write_cycle(&cycles, &cycle_counts, 3).unwrap();
 
         assert!(Path::new("cycles/cycle3.csv").exists());

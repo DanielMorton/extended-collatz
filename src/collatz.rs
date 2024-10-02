@@ -67,12 +67,12 @@ fn collatz_step(n: &mut Unsigned, a: u64, p: u64) {
 
     *n = match n {
         Unsigned::U64(u) => u
-            .checked_add(p - *u & (p - 1))
+            .checked_add(p - (*u & (p - 1)))
             .map(Unsigned::U64)
             .unwrap_or_else(|| Unsigned::U128((*u as u128) + (p - *u & (p - 1)) as u128)),
         Unsigned::U128(u) => {
             let p128 = p as u128;
-            u.checked_add(p128 - *u & (p128 - 1))
+            u.checked_add(p128 - (*u & (p128 - 1)))
                 .map(Unsigned::U128)
                 .unwrap_or_else(|| {
                     let mut i = Integer::new();
@@ -166,16 +166,17 @@ mod tests {
     #[test]
     fn test_collatz_step() {
         let mut n = Unsigned::from(3u64);
-        collatz_step(&mut n, 3, 4);
-        assert_eq!(n, Unsigned::from(5u64));
+        collatz_step(&mut n, 5, 4);
+        assert_eq!(n, Unsigned::from(1u64));
     }
 
     #[test]
     fn test_extended_collatz() {
-        let mut cycle_mins = Vec::new();
+        let mut cycle_mins = vec![Unsigned::from(1u64)];
         let mut cycles = HashMap::new();
-        extended_collatz(3, 3, 4, &mut cycle_mins, &mut cycles);
-        assert_eq!(cycle_mins.len(), 1);
+        cycles.insert(Unsigned::from(1u64), cycle_mins.clone());
+        extended_collatz(3, 3, 2, &mut cycle_mins, &mut cycles);
+        assert_eq!(cycle_mins.len(), 2);
         assert_eq!(cycles.len(), 1);
     }
 }

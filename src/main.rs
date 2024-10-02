@@ -31,7 +31,7 @@ fn process_collatz(
     should_write_table: bool,
     should_write_cycle: bool,
 ) -> Result<()> {
-    let p = (a - 1).next_power_of_two();
+    let p = a.next_power_of_two() / 2;
     let mut cycle_mins = Vec::new();
     let mut cycles = HashMap::new();
 
