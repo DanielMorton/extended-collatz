@@ -1,6 +1,6 @@
 use rug::{Assign, Integer};
 use std::collections::HashMap;
-use std::fmt;
+use std::fmt::{Formatter, Display, Result};
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub enum Unsigned {
@@ -20,8 +20,8 @@ impl Unsigned {
     }
 }
 
-impl fmt::Display for Unsigned {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+impl Display for Unsigned {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
             Unsigned::U64(u) => write!(f, "{}", u),
             Unsigned::U128(u) => write!(f, "{}", u),
