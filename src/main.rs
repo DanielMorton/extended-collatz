@@ -1,7 +1,5 @@
-#![allow(warnings)]
-use crate::collatz::extended_collatz;
-use crate::write::{write_cycle, write_table};
-use itertools::Itertools;
+use anyhow::Result;
+use log::info;
 use rayon::prelude::{IntoParallelIterator, ParallelIterator};
 use std::collections::HashMap;
 use std::time::Instant;
@@ -10,51 +8,62 @@ mod collatz;
 mod parse;
 mod write;
 
-fn print_hms(start: &Instant) {
+use crate::collatz::extended_collatz;
+use crate::parse::Args;
+use crate::write::{write_cycle, write_table};
+
+fn print_elapsed_time(start: &Instant) {
     let millis = start.elapsed().as_millis();
     let seconds = millis / 1000;
     let (hour, minute, second) = (seconds / 3600, (seconds % 3600) / 60, seconds % 60);
-    println!("{:02}:{:02}:{:02}.{}", hour, minute, second, millis % 1000)
+    info!(
+        "Elapsed time: {:02}:{:02}:{:02}.{:03}",
+        hour,
+        minute,
+        second,
+        millis % 1000
+    );
 }
 
-fn main() {
-    let matches = parse::parse();
-    let n = match matches.get_one::<u64>("n") {
-        Some(&n) => n,
-        None => panic!("Number of iterations not provided."),
-    };
-    let a_start = match matches.get_one::<u64>("start") {
-        Some(&s) => s,
-        None => panic!("No initial coefficient value."),
-    };
-    let a_end = match matches.get_one::<u64>("end") {
-        Some(&e) => e,
-        None => panic!("No final coefficient value."),
-    };
-    let table = matches.get_flag("table");
-    let cycle = matches.get_flag("cycle");
-    let start = Instant::now();
-    (a_start..=a_end)
-        .into_par_iter()
-        .filter(|&a| a & 1 == 1)
-        .for_each(|a| {
-            let mut p = 1;
-            while p < a {
-                p <<= 1;
-            }
-            p >>= 1;
-            let mut cycle_mins = Vec::new();
-            let mut cycles = HashMap::new();
-            (1..=n).step_by(2).for_each(|x| {
-                extended_collatz(x, a, p, &mut cycle_mins, &mut cycles);
-            });
-            if table && cycles.len() > 1 {
-                write_table(&cycle_mins, &n, &a);
-            }
-            if cycle {
-                let cycle_counts = cycle_mins.iter().counts();
-                write_cycle(&cycles, &cycle_counts, &a);
-            }
+fn process_collatz(
+    a: u64,
+    n: u64,
+    should_write_table: bool,
+    should_write_cycle: bool,
+) -> Result<()> {
+    let p = (a - 1).next_power_of_two();
+    let mut cycle_mins = Vec::new();
+    let mut cycles = HashMap::new();
+
+    (1..=n).step_by(2).for_each(|x| {
+        extended_collatz(x, a, p, &mut cycle_mins, &mut cycles);
+    });
+
+    if should_write_table && cycles.len() > 1 {
+        write_table(&cycle_mins, n, a)?;
+    }
+
+    if should_write_cycle {
+        let cycle_counts = cycle_mins.iter().fold(HashMap::new(), |mut acc, cm| {
+            *acc.entry(cm).or_insert(0) += 1;
+            acc
         });
-    print_hms(&start)
+        write_cycle(&cycles, &cycle_counts, a)?;
+    }
+
+    Ok(())
+}
+
+fn main() -> Result<()> {
+    env_logger::init();
+    let args = Args::parse()?;
+    let start = Instant::now();
+
+    (args.a_start..=args.a_end)
+        .into_par_iter()
+        .filter(|&a| a % 2 == 1)
+        .try_for_each(|a| process_collatz(a, args.n, args.write_table, args.write_cycle))?;
+
+    print_elapsed_time(&start);
+    Ok(())
 }

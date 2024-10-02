@@ -1,28 +1,42 @@
-use clap::{arg, value_parser, Arg, ArgMatches, Command};
+use anyhow::Result;
+use structopt::StructOpt;
 
-pub fn parse() -> ArgMatches {
-    Command::new("collatz")
-        .arg(
-            Arg::new("n")
-                .short('n')
-                .required(true)
-                .value_parser(value_parser!(u64)),
-        )
-        .arg(
-            Arg::new("start")
-                .long("start")
-                .short('s')
-                .required(true)
-                .value_parser(value_parser!(u64)),
-        )
-        .arg(
-            Arg::new("end")
-                .long("end")
-                .short('e')
-                .required(true)
-                .value_parser(value_parser!(u64)),
-        )
-        .arg(arg!(--table))
-        .arg(arg!(--cycle))
-        .get_matches()
+#[derive(Debug, StructOpt)]
+#[structopt(name = "collatz", about = "Extended Collatz conjecture calculator")]
+pub struct Args {
+    #[structopt(short, long)]
+    pub n: u64,
+
+    #[structopt(short, long)]
+    pub a_start: u64,
+
+    #[structopt(short, long)]
+    pub a_end: u64,
+
+    #[structopt(long)]
+    pub write_table: bool,
+
+    #[structopt(long)]
+    pub write_cycle: bool,
+}
+
+impl Args {
+    pub fn parse() -> Result<Self> {
+        Ok(Self::from_args())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_args_parse() {
+        let args = Args::from_iter(&["test", "-n", "100", "-a", "3", "-e", "5", "--write-table"]);
+        assert_eq!(args.n, 100);
+        assert_eq!(args.a_start, 3);
+        assert_eq!(args.a_end, 5);
+        assert!(args.write_table);
+        assert!(!args.write_cycle);
+    }
 }
