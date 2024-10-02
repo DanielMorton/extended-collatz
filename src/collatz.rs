@@ -1,6 +1,6 @@
 use rug::{Assign, Integer};
 use std::collections::HashMap;
-use std::fmt::{Formatter, Display, Result};
+use std::fmt::{Display, Formatter, Result};
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub enum Unsigned {
