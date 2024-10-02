@@ -4,18 +4,23 @@ use structopt::StructOpt;
 #[derive(Debug, StructOpt)]
 #[structopt(name = "collatz", about = "Extended Collatz conjecture calculator")]
 pub struct Args {
+    /// Number of iterations
     #[structopt(short, long)]
     pub n: u64,
 
-    #[structopt(short, long)]
+    /// Start value for 'a'
+    #[structopt(short = "s", long = "start")]
     pub a_start: u64,
 
-    #[structopt(short, long)]
+    /// End value for 'a'
+    #[structopt(short = "e", long = "end")]
     pub a_end: u64,
 
+    /// Write table output
     #[structopt(long)]
     pub write_table: bool,
 
+    /// Write cycle output
     #[structopt(long)]
     pub write_cycle: bool,
 }
@@ -32,7 +37,7 @@ mod tests {
 
     #[test]
     fn test_args_parse() {
-        let args = Args::from_iter(&["test", "-n", "100", "-a", "3", "-e", "5", "--write-table"]);
+        let args = Args::from_iter(&["test", "-n", "100", "-s", "3", "-e", "5", "--write-table"]);
         assert_eq!(args.n, 100);
         assert_eq!(args.a_start, 3);
         assert_eq!(args.a_end, 5);
