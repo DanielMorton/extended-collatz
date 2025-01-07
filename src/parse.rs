@@ -4,24 +4,19 @@ use structopt::StructOpt;
 #[derive(Debug, StructOpt)]
 #[structopt(name = "collatz", about = "Extended Collatz conjecture calculator")]
 pub struct Args {
-    /// Number of iterations
     #[structopt(short, long)]
     pub n: u64,
 
-    /// Start value for 'a'
     #[structopt(short = "s", long = "start")]
     pub a_start: u64,
 
-    /// End value for 'a'
     #[structopt(short = "e", long = "end")]
     pub a_end: u64,
 
-    /// Write table output
-    #[structopt(long)]
+    #[structopt(long, required_unless = "write-cycle")]
     pub write_table: bool,
 
-    /// Write cycle output
-    #[structopt(long)]
+    #[structopt(long, required_unless = "write-table")]
     pub write_cycle: bool,
 }
 
